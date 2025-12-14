@@ -1,33 +1,53 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [text, setText] = useState('')
+  const [translatedText, setTranslatedText] = useState('')
+  const [fromLanguage, setFromLanguage] = useState('')
+  const [toLanguage, setToLanguage] = useState('')
+
+  const translateText = () => {
+    console.log(fromLanguage, toLanguage);
+    fetch(`https://api.mymemory.translated.net/get?q=${text}&langpair=${fromLanguage}|${toLanguage}`)
+      .then(response => response.json())
+      .then(data =>
+        setTranslatedText(data.responseData.translatedText))
+      .catch(error => console.error('Error:', error));
+
+    console.log(translatedText);
+  }
 
   return (
     <>
+      <input type="text" placeholder="Enter text to translate" onChange={(e) => setText(e.target.value)} />
+      from language:
+      <select onChange={(e) => setFromLanguage(e.target.value)}>
+        <option >Select Language From</option>
+        <option value="en-GB">English</option>
+        <option value="fr-FR">French</option>
+        <option value="es-ES">Spanish</option>
+        <option value="de-DE">German</option>
+        <option value="it-IT">Italian</option>
+        <option value="pt-PT">Portuguese</option>
+
+      </select>
+      To language:
+      <select onChange={(e) => setToLanguage(e.target.value)}>
+        <option >Select Language To</option>
+        <option value="en-GB">English</option>
+        <option value="fr-FR">French</option>
+        <option value="es-ES">Spanish</option>
+        <option value="de-DE">German</option>
+        <option value="it-IT">Italian</option>
+        <option value="pt-PT">Portuguese</option>
+
+      </select>
+      <button onClick={translateText}>Translate</button>
+
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <p>{translatedText}</p>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }
