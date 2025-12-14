@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 
 function App() {
@@ -6,40 +6,63 @@ function App() {
   const [translatedText, setTranslatedText] = useState('')
   const [fromLanguage, setFromLanguage] = useState('')
   const [toLanguage, setToLanguage] = useState('')
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('theme') || 'light'
+  })
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme)
+    localStorage.setItem('theme', theme)
+  }, [theme])
+
+  const toggleTheme = () => {
+    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light')
+  }
 
   const translateText = () => {
-    if(text === '') {
+
+    if (text === '') {
       alert('Please enter text to translate')
       return
     }
-    if(fromLanguage === '') {
+
+    if (fromLanguage === '') {
       alert('Please select a from language')
       return
     }
-    if(toLanguage === '') {
+
+    if (toLanguage === '') {
       alert('Please select a to language')
       return
     }
-    if(fromLanguage === toLanguage) {
+
+    if (fromLanguage === toLanguage) {
       alert('Please select different languages')
       return
     }
 
-    console.log(fromLanguage, toLanguage);
     fetch(`https://api.mymemory.translated.net/get?q=${text}&langpair=${fromLanguage}|${toLanguage}`)
       .then(response => response.json())
       .then(data =>
         setTranslatedText(data.responseData.translatedText))
       .catch(error => console.error('Error:', error));
-
-    console.log(translatedText);
   }
 
   return (
     <div className="container mt-5">
       <div className="row justify-content-center">
         <div className="col-md-8">
-          <h1 className="text-center mb-4">Simple Translator</h1>
+          <div className="d-flex justify-content-between align-items-center mb-4">
+            <h1 className="text-center mb-0 flex-grow-1">Simple Translator</h1>
+            <button
+              className="btn btn-outline-secondary theme-toggle"
+              onClick={toggleTheme}
+              aria-label="Toggle theme"
+              title={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+            >
+              {theme === 'light' ? '🌙' : '☀️'}
+            </button>
+          </div>
 
           <div className="mb-3">
             <label htmlFor="textInput" className="form-label">Enter text to translate</label>

@@ -3,6 +3,19 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+html[data-theme="light"] #root,
+html:not([data-theme]) #root {
+  background-color: #ffffff;
+  color: #213547;
+}
+
+html[data-theme="dark"] #root {
+  background-color: #242424;
+  color: rgba(255, 255, 255, 0.87);
 }
 
 .logo {
@@ -39,4 +52,136 @@
 
 .read-the-docs {
   color: #888;
+}
+
+.theme-toggle {
+  font-size: 1.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.1);
+}
+
+html[data-theme="light"] .form-control,
+html:not([data-theme]) .form-control {
+  background-color: #ffffff;
+  color: #213547;
+  border-color: #ced4da;
+}
+
+html[data-theme="dark"] .form-control {
+  background-color: #1a1a1a;
+  color: rgba(255, 255, 255, 0.87);
+  border-color: #495057;
+}
+
+html[data-theme="light"] .form-select,
+html:not([data-theme]) .form-select {
+  background-color: #ffffff;
+  color: #213547;
+  border-color: #ced4da;
+}
+
+html[data-theme="dark"] .form-select {
+  background-color: #1a1a1a;
+  color: rgba(255, 255, 255, 0.87);
+  border-color: #495057;
+}
+
+html[data-theme="light"] .form-label,
+html:not([data-theme]) .form-label {
+  color: #213547;
+}
+
+html[data-theme="dark"] .form-label {
+  color: rgba(255, 255, 255, 0.87);
+}
+
+html[data-theme="light"] .card,
+html:not([data-theme]) .card {
+  background-color: #ffffff;
+  color: #213547;
+  border-color: #dee2e6;
+}
+
+html[data-theme="dark"] .card {
+  background-color: #1a1a1a;
+  color: rgba(255, 255, 255, 0.87);
+  border-color: #495057;
+}
+
+html[data-theme="light"] .card-title,
+html:not([data-theme]) .card-title {
+  color: #213547;
+}
+
+html[data-theme="dark"] .card-title {
+  color: rgba(255, 255, 255, 0.87);
+}
+
+html[data-theme="light"] .btn-primary,
+html:not([data-theme]) .btn-primary {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+html[data-theme="dark"] .btn-primary {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+html[data-theme="light"] .btn-outline-secondary,
+html:not([data-theme]) .btn-outline-secondary {
+  border-color: #6c757d;
+  color: #6c757d;
+}
+
+html[data-theme="dark"] .btn-outline-secondary {
+  border-color: #6c757d;
+  color: #adb5bd;
+}
+
+html[data-theme="dark"] .btn-outline-secondary:hover {
+  background-color: #6c757d;
+  color: #fff;
+}
+
+html[data-theme="light"] .container,
+html:not([data-theme]) .container {
+  color: #213547;
+}
+
+html[data-theme="dark"] .container {
+  color: rgba(255, 255, 255, 0.87);
+}
+
+html[data-theme="light"] p,
+html:not([data-theme]) p,
+html[data-theme="light"] .card-text,
+html:not([data-theme]) .card-text {
+  color: #213547;
+}
+
+html[data-theme="dark"] p,
+html[data-theme="dark"] .card-text {
+  color: rgba(255, 255, 255, 0.87);
+}
+
+html[data-theme="light"] option,
+html:not([data-theme]) option {
+  background-color: #ffffff;
+  color: #213547;
+}
+
+html[data-theme="dark"] option {
+  background-color: #1a1a1a;
+  color: rgba(255, 255, 255, 0.87);
 }
