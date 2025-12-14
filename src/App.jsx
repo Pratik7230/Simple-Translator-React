@@ -1,5 +1,190 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import './App.css'
+
+const languages = [
+  { value: 'af-ZA', label: 'Afrikaans' },
+  { value: 'sq-AL', label: 'Albanian' },
+  { value: 'am-ET', label: 'Amharic' },
+  { value: 'ar-SA', label: 'Arabic' },
+  { value: 'hy-AM', label: 'Armenian' },
+  { value: 'az-AZ', label: 'Azerbaijani' },
+  { value: 'bjs-BB', label: 'Bajan' },
+  { value: 'rm-RO', label: 'Balkan Gipsy' },
+  { value: 'eu-ES', label: 'Basque' },
+  { value: 'bem-ZM', label: 'Bemba' },
+  { value: 'bn-IN', label: 'Bengali' },
+  { value: 'be-BY', label: 'Bielarus' },
+  { value: 'bi-VU', label: 'Bislama' },
+  { value: 'bs-BA', label: 'Bosnian' },
+  { value: 'br-FR', label: 'Breton' },
+  { value: 'bg-BG', label: 'Bulgarian' },
+  { value: 'my-MM', label: 'Burmese' },
+  { value: 'ca-ES', label: 'Catalan' },
+  { value: 'ceb-PH', label: 'Cebuano' },
+  { value: 'ch-GU', label: 'Chamorro' },
+  { value: 'zh-CN', label: 'Chinese (Simplified)' },
+  { value: 'zh-TW', label: 'Chinese Traditional' },
+  { value: 'zdj-KM', label: 'Comorian (Ngazidja)' },
+  { value: 'cop-EG', label: 'Coptic' },
+  { value: 'en-GB', label: 'English' },
+
+  { value: 'aig-AG', label: 'Creole English (Antigua and Barbuda)' },
+  { value: 'bah-BS', label: 'Creole English (Bahamas)' },
+  { value: 'gcl-GD', label: 'Creole English (Grenadian)' },
+  { value: 'gyn-GY', label: 'Creole English (Guyanese)' },
+  { value: 'jam-JM', label: 'Creole English (Jamaican)' },
+  { value: 'svc-VC', label: 'Creole English (Vincentian)' },
+  { value: 'vic-US', label: 'Creole English (Virgin Islands)' },
+  { value: 'ht-HT', label: 'Creole French (Haitian)' },
+  { value: 'acf-LC', label: 'Creole French (Saint Lucian)' },
+  { value: 'crs-SC', label: 'Creole French (Seselwa)' },
+  { value: 'pov-GW', label: 'Creole Portuguese (Upper Guinea)' },
+  { value: 'hr-HR', label: 'Croatian' },
+  { value: 'cs-CZ', label: 'Czech' },
+  { value: 'da-DK', label: 'Danish' },
+  { value: 'nl-NL', label: 'Dutch' },
+  { value: 'dz-BT', label: 'Dzongkha' },
+  { value: 'eo-EU', label: 'Esperanto' },
+  { value: 'et-EE', label: 'Estonian' },
+  { value: 'fn-FNG', label: 'Fanagalo' },
+  { value: 'fo-FO', label: 'Faroese' },
+  { value: 'fi-FI', label: 'Finnish' },
+  { value: 'fr-FR', label: 'French' },
+  { value: 'gl-ES', label: 'Galician' },
+  { value: 'ka-GE', label: 'Georgian' },
+  { value: 'de-DE', label: 'German' },
+  { value: 'el-GR', label: 'Greek' },
+  { value: 'grc-GR', label: 'Greek (Classical)' },
+  { value: 'gu-IN', label: 'Gujarati' },
+  { value: 'ha-NE', label: 'Hausa' },
+  { value: 'haw-US', label: 'Hawaiian' },
+  { value: 'he-IL', label: 'Hebrew' },
+  { value: 'hi-IN', label: 'Hindi' },
+  { value: 'hu-HU', label: 'Hungarian' },
+  { value: 'is-IS', label: 'Icelandic' },
+  { value: 'id-ID', label: 'Indonesian' },
+  { value: 'kl-GL', label: 'Inuktitut (Greenlandic)' },
+  { value: 'ga-IE', label: 'Irish Gaelic' },
+  { value: 'it-IT', label: 'Italian' },
+  { value: 'ja-JP', label: 'Japanese' },
+  { value: 'jv-ID', label: 'Javanese' },
+  { value: 'kea-CV', label: 'Kabuverdianu' },
+  { value: 'kab-DZ', label: 'Kabylian' },
+  { value: 'kn-IN', label: 'Kannada' },
+  { value: 'kk-KZ', label: 'Kazakh' },
+  { value: 'km-KM', label: 'Khmer' },
+  { value: 'rw-RW', label: 'Kinyarwanda' },
+  { value: 'rn-BI', label: 'Kirundi' },
+  { value: 'ko-KR', label: 'Korean' },
+  { value: 'ku-TR', label: 'Kurdish' },
+  { value: 'ckb-IQ', label: 'Kurdish Sorani' },
+  { value: 'ky-KG', label: 'Kyrgyz' },
+  { value: 'la-VA', label: 'Latin' },
+  { value: 'lo-LA', label: 'Lao' },
+  { value: 'lv-LV', label: 'Latvian' },
+  { value: 'lt-LT', label: 'Lithuanian' },
+  { value: 'lb-LU', label: 'Luxembourgish' },
+  { value: 'mk-MK', label: 'Macedonian' },
+  { value: 'mg-MG', label: 'Malagasy' },
+  { value: 'ms-MY', label: 'Malay' },
+  { value: 'dv-MV', label: 'Maldivian' },
+  { value: 'mt-MT', label: 'Maltese' },
+  { value: 'gv-IM', label: 'Manx Gaelic' },
+  { value: 'mi-NZ', label: 'Maori' },
+  { value: 'mh-MH', label: 'Marshallese' },
+  { value: 'mr-IN', label: 'Marathi' },
+  { value: 'men-SL', label: 'Mende' },
+  { value: 'mn-MN', label: 'Mongolian' },
+  { value: 'mfe-MU', label: 'Morisyen' },
+  { value: 'ne-NP', label: 'Nepali' },
+  { value: 'niu-NU', label: 'Niuean' },
+  { value: 'no-NO', label: 'Norwegian' }
+]
+
+function SearchableSelect({ id, label, value, onChange, placeholder }) {
+  const [isOpen, setIsOpen] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
+  const dropdownRef = useRef(null)
+  const inputRef = useRef(null)
+
+  const selectedLanguage = languages.find(lang => lang.value === value)
+
+  const filteredLanguages = languages.filter(lang =>
+    lang.label.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false)
+        setSearchTerm('')
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+
+  const handleSelect = (lang) => {
+    onChange(lang.value)
+    setIsOpen(false)
+    setSearchTerm('')
+  }
+
+  return (
+    <div className="searchable-select-wrapper" ref={dropdownRef}>
+      <label htmlFor={id} className="form-label">{label}</label>
+      <div className={`searchable-select ${isOpen ? 'open' : ''}`}>
+        <div
+          className="searchable-select-input"
+          onClick={() => {
+            setIsOpen(!isOpen)
+            if (!isOpen) {
+              setTimeout(() => inputRef.current?.focus(), 0)
+            }
+          }}
+        >
+          <input
+            ref={inputRef}
+            type="text"
+            id={id}
+            className="form-control"
+            placeholder={placeholder || 'Select a language'}
+            value={isOpen ? searchTerm : (selectedLanguage?.label || '')}
+            onChange={(e) => {
+              setSearchTerm(e.target.value)
+              setIsOpen(true)
+            }}
+            onFocus={() => setIsOpen(true)}
+            readOnly={!isOpen}
+          />
+          <span className="searchable-select-arrow">▼</span>
+        </div>
+        {isOpen && (
+          <div className="searchable-select-dropdown">
+            {filteredLanguages.length > 0 ? (
+              <ul className="searchable-select-list">
+                {filteredLanguages.map((lang) => (
+                  <li
+                    key={lang.value}
+                    className={`searchable-select-option ${value === lang.value ? 'selected' : ''}`}
+                    onClick={() => handleSelect(lang)}
+                  >
+                    {lang.label}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="searchable-select-no-results">No languages found</div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
 
 function App() {
   const [text, setText] = useState('')
@@ -77,216 +262,22 @@ function App() {
 
           <div className="row mb-3">
             <div className="col-md-6">
-              <label htmlFor="fromLanguage" className="form-label">From language:</label>
-              <select
+              <SearchableSelect
                 id="fromLanguage"
-                className="form-select"
-                onChange={(e) => setFromLanguage(e.target.value)}
-              >
-                <option>Select a language</option>
-                <option value="af-ZA">Afrikaans</option>
-                <option value="sq-AL">Albanian</option>
-                <option value="am-ET">Amharic</option>
-                <option value="ar-SA">Arabic</option>
-                <option value="hy-AM">Armenian</option>
-                <option value="az-AZ">Azerbaijani</option>
-                <option value="bjs-BB">Bajan</option>
-                <option value="rm-RO">Balkan Gipsy</option>
-                <option value="eu-ES">Basque</option>
-                <option value="bem-ZM">Bemba</option>
-                <option value="bn-IN">Bengali</option>
-                <option value="be-BY">Bielarus</option>
-                <option value="bi-VU">Bislama</option>
-                <option value="bs-BA">Bosnian</option>
-                <option value="br-FR">Breton</option>
-                <option value="bg-BG">Bulgarian</option>
-                <option value="my-MM">Burmese</option>
-                <option value="ca-ES">Catalan</option>
-                <option value="ceb-PH">Cebuano</option>
-                <option value="ch-GU">Chamorro</option>
-                <option value="zh-CN">Chinese (Simplified)</option>
-                <option value="zh-TW">Chinese Traditional</option>
-                <option value="zdj-KM">Comorian (Ngazidja)</option>
-                <option value="cop-EG">Coptic</option>
-                <option value="aig-AG">Creole English (Antigua and Barbuda)</option>
-                <option value="bah-BS">Creole English (Bahamas)</option>
-                <option value="gcl-GD">Creole English (Grenadian)</option>
-                <option value="gyn-GY">Creole English (Guyanese)</option>
-                <option value="jam-JM">Creole English (Jamaican)</option>
-                <option value="svc-VC">Creole English (Vincentian)</option>
-                <option value="vic-US">Creole English (Virgin Islands)</option>
-                <option value="ht-HT">Creole French (Haitian)</option>
-                <option value="acf-LC">Creole French (Saint Lucian)</option>
-                <option value="crs-SC">Creole French (Seselwa)</option>
-                <option value="pov-GW">Creole Portuguese (Upper Guinea)</option>
-                <option value="hr-HR">Croatian</option>
-                <option value="cs-CZ">Czech</option>
-                <option value="da-DK">Danish</option>
-                <option value="nl-NL">Dutch</option>
-                <option value="dz-BT">Dzongkha</option>
-                <option value="en-GB">English</option>
-                <option value="eo-EU">Esperanto</option>
-                <option value="et-EE">Estonian</option>
-                <option value="fn-FNG">Fanagalo</option>
-                <option value="fo-FO">Faroese</option>
-                <option value="fi-FI">Finnish</option>
-                <option value="fr-FR">French</option>
-                <option value="gl-ES">Galician</option>
-                <option value="ka-GE">Georgian</option>
-                <option value="de-DE">German</option>
-                <option value="el-GR">Greek</option>
-                <option value="grc-GR">Greek (Classical)</option>
-                <option value="gu-IN">Gujarati</option>
-                <option value="ha-NE">Hausa</option>
-                <option value="haw-US">Hawaiian</option>
-                <option value="he-IL">Hebrew</option>
-                <option value="hi-IN">Hindi</option>
-                <option value="hu-HU">Hungarian</option>
-                <option value="is-IS">Icelandic</option>
-                <option value="id-ID">Indonesian</option>
-                <option value="kl-GL">Inuktitut (Greenlandic)</option>
-                <option value="ga-IE">Irish Gaelic</option>
-                <option value="it-IT">Italian</option>
-                <option value="ja-JP">Japanese</option>
-                <option value="jv-ID">Javanese</option>
-                <option value="kea-CV">Kabuverdianu</option>
-                <option value="kab-DZ">Kabylian</option>
-                <option value="kn-IN">Kannada</option>
-                <option value="kk-KZ">Kazakh</option>
-                <option value="km-KM">Khmer</option>
-                <option value="rw-RW">Kinyarwanda</option>
-                <option value="rn-BI">Kirundi</option>
-                <option value="ko-KR">Korean</option>
-                <option value="ku-TR">Kurdish</option>
-                <option value="ckb-IQ">Kurdish Sorani</option>
-                <option value="ky-KG">Kyrgyz</option>
-                <option value="la-VA">Latin</option>
-                <option value="lo-LA">Lao</option>
-                <option value="lv-LV">Latvian</option>
-                <option value="lt-LT">Lithuanian</option>
-                <option value="lb-LU">Luxembourgish</option>
-                <option value="mk-MK">Macedonian</option>
-                <option value="mg-MG">Malagasy</option>
-                <option value="ms-MY">Malay</option>
-                <option value="dv-MV">Maldivian</option>
-                <option value="mt-MT">Maltese</option>
-                <option value="gv-IM">Manx Gaelic</option>
-                <option value="mi-NZ">Maori</option>
-                <option value="mh-MH">Marshallese</option>
-                <option value="mr-IN">Marathi</option>
-                <option value="men-SL">Mende</option>
-                <option value="mn-MN">Mongolian</option>
-                <option value="mfe-MU">Morisyen</option>
-                <option value="ne-NP">Nepali</option>
-                <option value="niu-NU">Niuean</option>
-                <option value="no-NO">Norwegian</option>
-              </select>
+                label="From language:"
+                value={fromLanguage}
+                onChange={setFromLanguage}
+                placeholder="Select a language"
+              />
             </div>
             <div className="col-md-6">
-              <label htmlFor="toLanguage" className="form-label">To language:</label>
-              <select
+              <SearchableSelect
                 id="toLanguage"
-                className="form-select"
-                onChange={(e) => setToLanguage(e.target.value)}
-              >
-                <option>Select a language</option>
-                <option value="af-ZA">Afrikaans</option>
-                <option value="sq-AL">Albanian</option>
-                <option value="am-ET">Amharic</option>
-                <option value="ar-SA">Arabic</option>
-                <option value="hy-AM">Armenian</option>
-                <option value="az-AZ">Azerbaijani</option>
-                <option value="bjs-BB">Bajan</option>
-                <option value="rm-RO">Balkan Gipsy</option>
-                <option value="eu-ES">Basque</option>
-                <option value="bem-ZM">Bemba</option>
-                <option value="bn-IN">Bengali</option>
-                <option value="be-BY">Bielarus</option>
-                <option value="bi-VU">Bislama</option>
-                <option value="bs-BA">Bosnian</option>
-                <option value="br-FR">Breton</option>
-                <option value="bg-BG">Bulgarian</option>
-                <option value="my-MM">Burmese</option>
-                <option value="ca-ES">Catalan</option>
-                <option value="ceb-PH">Cebuano</option>
-                <option value="ch-GU">Chamorro</option>
-                <option value="zh-CN">Chinese (Simplified)</option>
-                <option value="zh-TW">Chinese Traditional</option>
-                <option value="zdj-KM">Comorian (Ngazidja)</option>
-                <option value="cop-EG">Coptic</option>
-                <option value="aig-AG">Creole English (Antigua and Barbuda)</option>
-                <option value="bah-BS">Creole English (Bahamas)</option>
-                <option value="gcl-GD">Creole English (Grenadian)</option>
-                <option value="gyn-GY">Creole English (Guyanese)</option>
-                <option value="jam-JM">Creole English (Jamaican)</option>
-                <option value="svc-VC">Creole English (Vincentian)</option>
-                <option value="vic-US">Creole English (Virgin Islands)</option>
-                <option value="ht-HT">Creole French (Haitian)</option>
-                <option value="acf-LC">Creole French (Saint Lucian)</option>
-                <option value="crs-SC">Creole French (Seselwa)</option>
-                <option value="pov-GW">Creole Portuguese (Upper Guinea)</option>
-                <option value="hr-HR">Croatian</option>
-                <option value="cs-CZ">Czech</option>
-                <option value="da-DK">Danish</option>
-                <option value="nl-NL">Dutch</option>
-                <option value="dz-BT">Dzongkha</option>
-                <option value="en-GB">English</option>
-                <option value="eo-EU">Esperanto</option>
-                <option value="et-EE">Estonian</option>
-                <option value="fn-FNG">Fanagalo</option>
-                <option value="fo-FO">Faroese</option>
-                <option value="fi-FI">Finnish</option>
-                <option value="fr-FR">French</option>
-                <option value="gl-ES">Galician</option>
-                <option value="ka-GE">Georgian</option>
-                <option value="de-DE">German</option>
-                <option value="el-GR">Greek</option>
-                <option value="grc-GR">Greek (Classical)</option>
-                <option value="gu-IN">Gujarati</option>
-                <option value="ha-NE">Hausa</option>
-                <option value="haw-US">Hawaiian</option>
-                <option value="he-IL">Hebrew</option>
-                <option value="hi-IN">Hindi</option>
-                <option value="hu-HU">Hungarian</option>
-                <option value="is-IS">Icelandic</option>
-                <option value="id-ID">Indonesian</option>
-                <option value="kl-GL">Inuktitut (Greenlandic)</option>
-                <option value="ga-IE">Irish Gaelic</option>
-                <option value="it-IT">Italian</option>
-                <option value="ja-JP">Japanese</option>
-                <option value="jv-ID">Javanese</option>
-                <option value="kea-CV">Kabuverdianu</option>
-                <option value="kab-DZ">Kabylian</option>
-                <option value="kn-IN">Kannada</option>
-                <option value="kk-KZ">Kazakh</option>
-                <option value="km-KM">Khmer</option>
-                <option value="rw-RW">Kinyarwanda</option>
-                <option value="rn-BI">Kirundi</option>
-                <option value="ko-KR">Korean</option>
-                <option value="ku-TR">Kurdish</option>
-                <option value="ckb-IQ">Kurdish Sorani</option>
-                <option value="ky-KG">Kyrgyz</option>
-                <option value="la-VA">Latin</option>
-                <option value="lo-LA">Lao</option>
-                <option value="lv-LV">Latvian</option>
-                <option value="lt-LT">Lithuanian</option>
-                <option value="lb-LU">Luxembourgish</option>
-                <option value="mk-MK">Macedonian</option>
-                <option value="mg-MG">Malagasy</option>
-                <option value="ms-MY">Malay</option>
-                <option value="dv-MV">Maldivian</option>
-                <option value="mt-MT">Maltese</option>
-                <option value="gv-IM">Manx Gaelic</option>
-                <option value="mi-NZ">Maori</option>
-                <option value="mh-MH">Marshallese</option>
-                <option value="men-SL">Mende</option>
-                <option value="mn-MN">Mongolian</option>
-                <option value="mfe-MU">Morisyen</option>
-                <option value="mr-IN">Marathi</option>
-                <option value="ne-NP">Nepali</option>
-                <option value="niu-NU">Niuean</option>
-                <option value="no-NO">Norwegian</option>
-              </select>
+                label="To language:"
+                value={toLanguage}
+                onChange={setToLanguage}
+                placeholder="Select a language"
+              />
             </div>
           </div>
 
